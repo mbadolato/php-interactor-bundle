@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="php-interactor.dependency_coordinator.class">PhpInteractor\DependencyCoordinator</parameter>
+    </parameters>
+
+    <services>
+        <service id="php-interactor.dependencies" class="%php-interactor.dependency_coordinator.class%" abstract="true" />
+    </services>
+</container>

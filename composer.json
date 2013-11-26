@@ -28,7 +28,6 @@
         "matthiasnoback/symfony-config-test": "dev-master",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "phploc/phploc": "dev-master",
-        "phpspec/prophecy-phpunit": "~1.0",
         "phpunit/phpunit": "3.7.*"
     },
     "config": {
