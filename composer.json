@@ -1,0 +1,44 @@
+{
+    "name": "php-interactor-bundle/php-interactor-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 bundle to integrate the php-interactor library",
+    "keywords": ["interactor"],
+    "homepage": "https://github.com/mbadolato/php-interactor-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mark Badolato",
+            "email": "mbadolato@cybernox.com",
+            "homepage": "http://www.markbadolato.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/mbadolato/php-interactor-bundle/issues"
+    },
+    "require": {
+        "php": ">=5.4",
+        "phpcollection/phpcollection": "dev-master",
+        "php-interactor/php-interactor": "dev-master",
+        "symfony/framework-bundle": "~2.1"
+    },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "*",
+        "instaclick/base-test-bundle": "0.*",
+        "matthiasnoback/symfony-config-test": "dev-master",
+        "matthiasnoback/symfony-dependency-injection-test": "0.*",
+        "phploc/phploc": "dev-master",
+        "phpspec/prophecy-phpunit": "~1.0",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "PhpInteractor\\PhpInteractorBundle\\": ""
+        }
+    },
+    "target-dir": "PhpInteractor/PhpInteractorBundle",
+    "minimum-stability": "stable"
+}
