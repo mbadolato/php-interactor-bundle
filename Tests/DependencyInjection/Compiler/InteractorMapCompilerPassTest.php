@@ -15,13 +15,14 @@
 namespace PhpInteractor\PhpInteractorBundle\Tests\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorCompilerPass;
+use PhpInteractor\InteractorMap;
+use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorMapCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 class InteractorMapCompilerPassTest extends AbstractCompilerPassTestCase
 {
-    /** @var InteractorCompilerPass */
+    /** @var InteractorMapCompilerPass */
     private $compilerPass;
 
     /** @var string */
@@ -38,25 +39,21 @@ class InteractorMapCompilerPassTest extends AbstractCompilerPassTestCase
         $directory->addTag('php-interactor.directory');
         $this->setDefinition('php-interactor.directory.test', $directory);
 
-        $globalDependencies = new Definition();
-        $globalDependencies->addArgument(['type' => 'service', 'key' => 'foo_name', 'id' => 'foo_service_id']);
-        $globalDependencies->setClass('PhpInteractor\DependencyCoordinator');
-        $globalDependencies->addTag('php-interactor.dependency');
-        $this->setDefinition('php-interactor.dependency.global', $globalDependencies);
-
         $this->compile();
 
+        $map = new InteractorMap();
+        $map->set('TestInteractor', 'PhpInteractor\PhpInteractorBundle\Tests\Helper\Interactor\TestInteractor');
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'php-interactor.dispatcher',
-            'registerInteractor',
-            ['TestInteractor', 'PhpInteractor\PhpInteractorBundle\Tests\Helper\Interactor\TestInteractor']
+            'setInteractorMap',
+            [$map]
         );
     }
 
     /** {@inheritDoc} */
     protected function registerCompilerPass(ContainerBuilder $container)
     {
-        $this->container->addCompilerPass(new InteractorCompilerPass());
+        $this->container->addCompilerPass(new InteractorMapCompilerPass());
     }
 
     /** {@inheritDoc} */
@@ -64,7 +61,7 @@ class InteractorMapCompilerPassTest extends AbstractCompilerPassTestCase
     {
         parent::setUp();
 
-        $this->compilerPass = new InteractorCompilerPass();
+        $this->compilerPass = new InteractorMapCompilerPass();
         $this->directory    = __DIR__ . '/../../Helper/Interactor';
     }
 }

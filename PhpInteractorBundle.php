@@ -15,7 +15,7 @@
 namespace PhpInteractor\PhpInteractorBundle;
 
 use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorDependencyCompilerPass;
-use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorCompilerPass;
+use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorMapCompilerPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -25,6 +25,7 @@ class PhpInteractorBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-        $container->addCompilerPass(new InteractorCompilerPass(), PassConfig::TYPE_AFTER_REMOVING);
+        $container->addCompilerPass(new InteractorMapCompilerPass(), PassConfig::TYPE_AFTER_REMOVING);
+        $container->addCompilerPass(new InteractorDependencyCompilerPass(), PassConfig::TYPE_AFTER_REMOVING);
     }
 }

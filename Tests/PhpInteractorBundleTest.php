@@ -24,11 +24,16 @@ class PhpInteractorBundleTest extends BundleTestCase
         $bundle->build($this->container);
 
         $resources = $this->container->getResources();
-        $this->assertCount(1, $resources);
+        $this->assertCount(2, $resources);
 
-        /** @var FileResource $resource */
-        $resource = $resources[0];
-        $parts = explode('/', $resource->getResource());
-        $this->assertEquals('InteractorCompilerPass.php', end($parts));
+        /** @var FileResource $interactorMapResource */
+        $interactorMapResource = $resources[0];
+        $parts = explode('/', $interactorMapResource->getResource());
+        $this->assertEquals('InteractorMapCompilerPass.php', end($parts));
+
+        /** @var FileResource $interactorDependencyResource */
+        $interactorDependencyResource = $resources[1];
+        $parts = explode('/', $interactorDependencyResource->getResource());
+        $this->assertEquals('InteractorDependencyCompilerPass.php', end($parts));
     }
 }
