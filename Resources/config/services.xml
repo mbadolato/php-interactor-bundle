@@ -4,4 +4,22 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="php-interactor.dependency_coordinator.class">PhpInteractor\DependencyCoordinator</parameter>
+    </parameters>
+
+    <services>
+        <service id="php-interactor.dependencies" class="%php-interactor.dependency_coordinator.class%" abstract="true" />
+
+        <!-- For tests; remove these when done building the compiler pass -->
+        <service id="interactor.dependencies.global" parent="php-interactor.dependencies" public="false">
+            <argument type="service" key="repository_manager" id="cms.repository_manager" />
+            <tag name="php-interactor.dependency" />
+        </service>
+
+        <service id="interactor.dependencies.add_visit_to_encounter" parent="php-interactor.dependencies" public="false">
+            <argument type="service" key="foo_service" id="cms.foo" />
+            <tag name="php-interactor.dependency" interactor="AddVisitToEncounter" />
+        </service>
+    </services>
 </container>

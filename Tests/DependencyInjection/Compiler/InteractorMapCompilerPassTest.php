@@ -33,16 +33,22 @@ class InteractorMapCompilerPassTest extends AbstractCompilerPassTestCase
         $this->setDefinition('php-interactor.dispatcher', new Definition());
 
         $directory = new Definition();
-        $directory->addTag('php-interactor.directory');
         $directory->setArguments([$this->directory]);
         $directory->setClass('PhpInteractor\DirectoryProcessor');
+        $directory->addTag('php-interactor.directory');
         $this->setDefinition('php-interactor.directory.test', $directory);
+
+        $globalDependencies = new Definition();
+        $globalDependencies->addArgument(['type' => 'service', 'key' => 'foo_name', 'id' => 'foo_service_id']);
+        $globalDependencies->setClass('PhpInteractor\DependencyCoordinator');
+        $globalDependencies->addTag('php-interactor.dependency');
+        $this->setDefinition('php-interactor.dependency.global', $globalDependencies);
 
         $this->compile();
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
             'php-interactor.dispatcher',
-            'register',
+            'registerInteractor',
             ['TestInteractor', 'PhpInteractor\PhpInteractorBundle\Tests\Helper\Interactor\TestInteractor']
         );
     }
