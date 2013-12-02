@@ -6,9 +6,11 @@
 
     <parameters>
         <parameter key="php-interactor.dependency_coordinator.class">PhpInteractor\DependencyCoordinator</parameter>
+        <parameter key="php-interactor.directory_processor.class">PhpInteractor\DirectoryProcessor</parameter>
     </parameters>
 
     <services>
         <service id="php-interactor.dependencies" class="%php-interactor.dependency_coordinator.class%" abstract="true" />
+        <service id="php-interactor.directory_processor" class="%php-interactor.directory_processor.class%" abstract="true" />
     </services>
 </container>
