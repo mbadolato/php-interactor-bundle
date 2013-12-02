@@ -1,4 +1,4 @@
-php-interactor-bundle-bundle
+php-interactor-bundle
 =====================
 
 Symfony2 bundle to integrate the php-interactor-bundle library
