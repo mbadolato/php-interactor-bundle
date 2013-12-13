@@ -14,13 +14,15 @@
 
 namespace PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler;
 
-use PhpInteractor\DependencyCoordinator;
 use PhpInteractor\Dispatcher;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class InteractorDependencyCompilerPass implements CompilerPassInterface
 {
+    const DEPENDENCY_TAG = 'php_interactor.tag.dependency';
+    const DISPATCHER_TAG = 'php_interactor.tag.dispatcher';
+
     /** @var ContainerBuilder */
     private $container;
 
@@ -34,19 +36,14 @@ class InteractorDependencyCompilerPass implements CompilerPassInterface
         }
     }
 
-    private function getDispatcher()
+    private function getDispatcherDefinition()
     {
-        return $this->getServiceDefinition($this->container->getParameter('php-interactor.tag.dispatcher'));
+        return $this->getServiceDefinition($this->container->getParameter(self::DISPATCHER_TAG));
     }
 
     private function getInteractorName(array $attributes)
     {
         return $this->isInteractorDependency($attributes) ? $attributes[0]['interactor'] : null;
-    }
-
-    private function getRegistrationMethodName($interactor)
-    {
-        return $interactor ? DependencyCoordinator::REGISTER_INTERACTOR_METHOD : DependencyCoordinator::REGISTER_GLOBAL_METHOD;
     }
 
     private function getServiceDefinition($definitionId)
@@ -56,12 +53,12 @@ class InteractorDependencyCompilerPass implements CompilerPassInterface
 
     private function getTaggedServices()
     {
-        return $this->container->findTaggedServiceIds($this->container->getParameter('php-interactor.tag.dependency'));
+        return $this->container->findTaggedServiceIds($this->container->getParameter(self::DEPENDENCY_TAG));
     }
 
     private function interactorDispatcherIsDefined()
     {
-        return $this->container->has($this->container->getParameter('php-interactor.tag.dispatcher'));
+        return $this->container->hasDefinition($this->container->getParameter(self::DISPATCHER_TAG));
     }
 
     private function isInteractorDependency(array $attributes)
@@ -71,23 +68,18 @@ class InteractorDependencyCompilerPass implements CompilerPassInterface
 
     private function mapInteractorDependencies()
     {
-        $dependencyCoordinator = new DependencyCoordinator();
-
         foreach ($this->getTaggedServices() as $serviceId => $attributes) {
-            $this->registerDependencies($serviceId, $attributes, $dependencyCoordinator);
+            $this->registerDependencies($serviceId, $attributes);
         }
-
-        $this->getDispatcher()->addMethodCall(Dispatcher::REGISTER_DEPENDENCIES_METHOD, [$dependencyCoordinator]);
     }
 
-    private function registerDependencies($serviceId, $attributes, $dependencyCoordinator)
+    private function registerDependencies($serviceId, $attributes)
     {
-        $interactorName     = $this->getInteractorName($attributes);
-        $registrationMethod = $this->getRegistrationMethodName($interactorName);
-        $arguments          = $this->getServiceDefinition($serviceId)->getArguments();
+        $arguments = $this->getServiceDefinition($serviceId)->getArguments();
 
         foreach ($arguments as $argument) {
-            $dependencyCoordinator->$registrationMethod($argument['key'], $argument['id'], $interactorName);
+            $parameters = [$argument['name'], $argument['value'], $this->getInteractorName($attributes)];
+            $this->getDispatcherDefinition()->addMethodCall(Dispatcher::REGISTER_DEPENDENCIES_METHOD, $parameters);
         }
     }
 }

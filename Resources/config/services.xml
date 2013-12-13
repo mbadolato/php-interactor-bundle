@@ -5,12 +5,17 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="php-interactor.dependency_coordinator.class">PhpInteractor\DependencyCoordinator</parameter>
-        <parameter key="php-interactor.directory_processor.class">PhpInteractor\DirectoryProcessor</parameter>
+        <parameter key="php_interactor.dependency_coordinator.class">PhpInteractor\DependencyCoordinator</parameter>
+        <parameter key="php_interactor.directory_processor.class">PhpInteractor\DirectoryProcessor</parameter>
+        <parameter key="php_interactor.dispatcher.class">PhpInteractor\Dispatcher</parameter>
     </parameters>
 
     <services>
-        <service id="php-interactor.dependencies" class="%php-interactor.dependency_coordinator.class%" abstract="true" />
-        <service id="php-interactor.directory_processor" class="%php-interactor.directory_processor.class%" abstract="true" />
+        <service id="php_interactor.dependencies" class="%php_interactor.dependency_coordinator.class%" abstract="true" />
+        <service id="php_interactor.directory_processor" class="%php_interactor.directory_processor.class%" abstract="true" />
+
+        <service id="php_interactor.dependency_coordinator" class="PhpInteractor\DependencyCoordinator" public="false"/>
+        <service id="php_interactor.interactor_map" class="PhpInteractor\InteractorMap" public="false" />
+        <service id="php_interactor.dispatcher" class="%php_interactor.dispatcher.class%" />
     </services>
 </container>

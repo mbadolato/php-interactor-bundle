@@ -15,7 +15,6 @@
 namespace PhpInteractor\PhpInteractorBundle\Tests\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use PhpInteractor\InteractorMap;
 use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorMapCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -31,22 +30,20 @@ class InteractorMapCompilerPassTest extends AbstractCompilerPassTestCase
     /** @test */
     public function process()
     {
-        $this->setDefinition($this->container->getParameter('php-interactor.tag.dispatcher'), new Definition());
+        $this->setDefinition($this->container->getParameter('php_interactor.tag.dispatcher'), new Definition());
 
         $directory = new Definition();
         $directory->setArguments([$this->directory]);
         $directory->setClass('PhpInteractor\DirectoryProcessor');
-        $directory->addTag($this->container->getParameter('php-interactor.tag.directory'));
-        $this->setDefinition('php-interactor.directory.test', $directory);
+        $directory->addTag($this->container->getParameter('php_interactor.tag.directory'));
+        $this->setDefinition('php_interactor.directory.test', $directory);
 
         $this->compile();
 
-        $map = new InteractorMap();
-        $map->set('TestInteractor', 'PhpInteractor\PhpInteractorBundle\Tests\Helper\Interactor\TestInteractor');
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            $this->container->getParameter('php-interactor.tag.dispatcher'),
-            'setInteractorMap',
-            [$map]
+            $this->container->getParameter('php_interactor.tag.dispatcher'),
+            'registerInteractor',
+            ['TestInteractor', 'PhpInteractor\PhpInteractorBundle\Tests\Helper\Interactor\TestInteractor']
         );
     }
 
@@ -64,7 +61,7 @@ class InteractorMapCompilerPassTest extends AbstractCompilerPassTestCase
         $this->compilerPass = new InteractorMapCompilerPass();
         $this->directory    = __DIR__ . '/../../Helper/Interactor';
 
-        $this->container->setParameter('php-interactor.tag.directory', 'php-interactor.directory');
-        $this->container->setParameter('php-interactor.tag.dispatcher', 'php-interactor.dispatcher');
+        $this->container->setParameter('php_interactor.tag.directory', 'php_interactor.directory');
+        $this->container->setParameter('php_interactor.tag.dispatcher', 'php_interactor.dispatcher');
     }
 }

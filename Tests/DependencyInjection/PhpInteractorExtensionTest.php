@@ -23,9 +23,9 @@ class CoreDomainExtensionTest extends AbstractExtensionTestCase
     public function tagParameters()
     {
         $this->load();
-        $this->assertContainerBuilderHasParameter('php-interactor.tag.dependency', 'php-interactor.dependency');
-        $this->assertContainerBuilderHasParameter('php-interactor.tag.directory', 'php-interactor.directory');
-        $this->assertContainerBuilderHasParameter('php-interactor.tag.dispatcher', 'php-interactor.dispatcher');
+        $this->assertContainerBuilderHasParameter('php_interactor.tag.dependency', 'php_interactor.dependency');
+        $this->assertContainerBuilderHasParameter('php_interactor.tag.directory', 'php_interactor.directory');
+        $this->assertContainerBuilderHasParameter('php_interactor.tag.dispatcher', 'php_interactor.dispatcher');
     }
 
     /** {@inheritDoc} */

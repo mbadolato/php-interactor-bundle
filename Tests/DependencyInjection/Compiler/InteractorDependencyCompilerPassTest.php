@@ -15,7 +15,6 @@
 namespace PhpInteractor\PhpInteractorBundle\Tests\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use PhpInteractor\DependencyCoordinator;
 use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorDependencyCompilerPass;
 use PhpInteractor\PhpInteractorBundle\DependencyInjection\Compiler\InteractorMapCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,15 +37,21 @@ class InteractorDependencyCompilerPassTest extends AbstractCompilerPassTestCase
     /** @test */
     public function process()
     {
-        $this->setDefinition( $this->container->getParameter('php-interactor.tag.dispatcher'), new Definition());
-        $this->setDefinition('php-interactor.dependency.global', $this->getGlobalDependencyDefinition());
-        $this->setDefinition('php-interactor.dependency.interactor_specific', $this->getInteractorDependencyDefinition());
+        $this->setDefinition( $this->container->getParameter('php_interactor.tag.dispatcher'), new Definition());
+        $this->setDefinition('php_interactor.dependency.global', $this->getGlobalDependencyDefinition());
+        $this->setDefinition('php_interactor.dependency.interactor_specific', $this->getInteractorDependencyDefinition());
         $this->compile();
 
         $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            $this->container->getParameter('php-interactor.tag.dispatcher'),
-            'setDependencyCoordinator',
-            [$this->getDependencyCoordinator()]
+            $this->container->getParameter('php_interactor.tag.dispatcher'),
+            'registerDependency',
+            [self::G_DEPENDENCY_NAME, self::G_DEPENDENCY_VALUE, null]
+        );
+
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            $this->container->getParameter('php_interactor.tag.dispatcher'),
+            'registerDependency',
+            [self::I_DEPENDENCY_NAME, self::I_DEPENDENCY_VALUE, self::I_NAME]
         );
     }
 
@@ -64,25 +69,16 @@ class InteractorDependencyCompilerPassTest extends AbstractCompilerPassTestCase
         $this->compilerPass = new InteractorDependencyCompilerPass();
         $this->directory    = __DIR__ . '/../../Helper/Interactor';
 
-        $this->container->setParameter('php-interactor.tag.dependency', 'php-interactor.dependency');
-        $this->container->setParameter('php-interactor.tag.dispatcher', 'php-interactor.dispatcher');
-    }
-
-    private function getDependencyCoordinator()
-    {
-        $coordinator = new DependencyCoordinator();
-        $coordinator->registerGlobalDependency(self::G_DEPENDENCY_NAME, self::G_DEPENDENCY_VALUE);
-        $coordinator->registerInteractorDependency(self::I_DEPENDENCY_NAME, self::I_DEPENDENCY_VALUE, self::I_NAME);
-
-        return $coordinator;
+        $this->container->setParameter('php_interactor.tag.dependency', 'php_interactor.dependency');
+        $this->container->setParameter('php_interactor.tag.dispatcher', 'php_interactor.dispatcher');
     }
 
     private function getGlobalDependencyDefinition()
     {
         $definition = new Definition();
-        $definition->addArgument(['type' => 'service', 'key' => self::G_DEPENDENCY_NAME, 'id' => self::G_DEPENDENCY_VALUE]);
+        $definition->addArgument(['name'=> self::G_DEPENDENCY_NAME, 'value' => self::G_DEPENDENCY_VALUE]);
         $definition->setClass('PhpInteractor\DependencyCoordinator');
-        $definition->addTag($this->container->getParameter('php-interactor.tag.dependency'));
+        $definition->addTag($this->container->getParameter('php_interactor.tag.dependency'));
 
         return $definition;
     }
@@ -90,9 +86,9 @@ class InteractorDependencyCompilerPassTest extends AbstractCompilerPassTestCase
     private function getInteractorDependencyDefinition()
     {
         $definition = new Definition();
-        $definition->addArgument(['type' => 'service', 'key' => self::I_DEPENDENCY_NAME, 'id' => self::I_DEPENDENCY_VALUE]);
+        $definition->addArgument(['name' => self::I_DEPENDENCY_NAME, 'value' => self::I_DEPENDENCY_VALUE]);
         $definition->setClass('PhpInteractor\DependencyCoordinator');
-        $definition->addTag($this->container->getParameter('php-interactor.tag.dependency'), ['interactor' => self::I_NAME]);
+        $definition->addTag($this->container->getParameter('php_interactor.tag.dependency'), ['interactor' => self::I_NAME]);
 
         return $definition;
     }

@@ -42,8 +42,8 @@ class PhpInteractorExtension extends Extension
 
     private function createBundleTags(ContainerBuilder $container)
     {
-        $container->setParameter('php-interactor.tag.dependency', 'php-interactor.dependency');
-        $container->setParameter('php-interactor.tag.directory', 'php-interactor.directory');
-        $container->setParameter('php-interactor.tag.dispatcher', 'php-interactor.dispatcher');
+        $container->setParameter('php_interactor.tag.dependency', 'php_interactor.dependency');
+        $container->setParameter('php_interactor.tag.directory', 'php_interactor.directory');
+        $container->setParameter('php_interactor.tag.dispatcher', 'php_interactor.dispatcher');
     }
 }

@@ -22,6 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class InteractorMapCompilerPass implements CompilerPassInterface
 {
+    const DIRECTORY_TAG  = 'php_interactor.tag.directory';
+    const DISPATCHER_TAG = 'php_interactor.tag.dispatcher';
+
     /** @var ContainerBuilder */
     private $container;
 
@@ -49,25 +52,32 @@ class InteractorMapCompilerPass implements CompilerPassInterface
         return $reflector->getMethod(DirectoryProcessor::GET_INTERACTOR_MAP_METHOD)->invoke($object);
     }
 
+    private function getDispatcherDefinition()
+    {
+        return $this->getServiceDefinition($this->container->getParameter(self::DISPATCHER_TAG));
+    }
+
     private function getTaggedServices()
     {
-        return $this->container->findTaggedServiceIds($this->container->getParameter('php-interactor.tag.directory'));
+        return $this->container->findTaggedServiceIds($this->container->getParameter(self::DIRECTORY_TAG));
     }
 
     private function interactorDispatcherIsDefined()
     {
-        return $this->container->has($this->container->getParameter('php-interactor.tag.dispatcher'));
+        return $this->container->hasDefinition($this->container->getParameter(self::DISPATCHER_TAG));
     }
 
     private function mapInteractors()
     {
-        $interactorMap = new InteractorMap();
-
         foreach ($this->getTaggedServices() as $serviceId => $taggedAttributes) {
-            $interactorMap->addMap($this->getServiceInteractors($serviceId)->getMap());
+            $this->registerInteractors($this->getServiceInteractors($serviceId));
         }
+    }
 
-        $definition = $this->getServiceDefinition($this->container->getParameter('php-interactor.tag.dispatcher'));
-        $definition->addMethodCall(Dispatcher::REGISTER_INTERACTORS_METHOD, [$interactorMap]);
+    private function registerInteractors(InteractorMap $interactorMap)
+    {
+        foreach ($interactorMap->iterator() as $name => $class) {
+            $this->getDispatcherDefinition()->addMethodCall(Dispatcher::REGISTER_INTERACTORS_METHOD, [$name, $class]);
+        }
     }
 }
