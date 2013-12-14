@@ -44,6 +44,6 @@ class PhpInteractorExtension extends Extension
     {
         $container->setParameter('php_interactor.tag.dependency', 'php_interactor.dependency');
         $container->setParameter('php_interactor.tag.directory', 'php_interactor.directory');
-        $container->setParameter('php_interactor.tag.dispatcher', 'php_interactor.dispatcher');
+        $container->setParameter('php_interactor.tag.dispatcher', 'php_interactor');
     }
 }

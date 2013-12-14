@@ -17,7 +17,7 @@ namespace PhpInteractor\PhpInteractorBundle\Tests\DependencyInjection;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use PhpInteractor\PhpInteractorBundle\DependencyInjection\PhpInteractorExtension;
 
-class CoreDomainExtensionTest extends AbstractExtensionTestCase
+class PhpInteractorExtensionTest extends AbstractExtensionTestCase
 {
     /** @test */
     public function tagParameters()
@@ -25,7 +25,7 @@ class CoreDomainExtensionTest extends AbstractExtensionTestCase
         $this->load();
         $this->assertContainerBuilderHasParameter('php_interactor.tag.dependency', 'php_interactor.dependency');
         $this->assertContainerBuilderHasParameter('php_interactor.tag.directory', 'php_interactor.directory');
-        $this->assertContainerBuilderHasParameter('php_interactor.tag.dispatcher', 'php_interactor.dispatcher');
+        $this->assertContainerBuilderHasParameter('php_interactor.tag.dispatcher', 'php_interactor');
     }
 
     /** {@inheritDoc} */
