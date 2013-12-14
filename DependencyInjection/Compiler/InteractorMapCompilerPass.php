@@ -46,7 +46,7 @@ class InteractorMapCompilerPass implements CompilerPassInterface
     private function getServiceInteractors($serviceId)
     {
         $definition = $this->getServiceDefinition($serviceId);
-        $reflector  = new \ReflectionClass($definition->getClass());
+        $reflector  = new \ReflectionClass('PhpInteractor\DirectoryProcessor');
         $object     = $reflector->newInstanceArgs($definition->getArguments());
 
         return $reflector->getMethod(DirectoryProcessor::GET_INTERACTOR_MAP_METHOD)->invoke($object);
