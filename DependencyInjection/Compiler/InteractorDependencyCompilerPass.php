@@ -77,8 +77,15 @@ class InteractorDependencyCompilerPass implements CompilerPassInterface
     {
         $arguments = $this->getServiceDefinition($serviceId)->getArguments();
 
-        foreach ($arguments as $argument) {
-            $parameters = [$argument['name'], $argument['value'], $this->getInteractorName($attributes)];
+        foreach ($arguments as $definition) {
+            $this->registerDependency($attributes, $definition);
+        }
+    }
+
+    private function registerDependency($attributes, array $definition)
+    {
+        foreach ($definition as $name => $value) {
+            $parameters = [$name, $value, $this->getInteractorName($attributes)];
             $this->getDispatcherDefinition()->addMethodCall(Dispatcher::REGISTER_DEPENDENCIES_METHOD, $parameters);
         }
     }

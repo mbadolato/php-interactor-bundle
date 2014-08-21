@@ -76,7 +76,7 @@ class InteractorDependencyCompilerPassTest extends AbstractCompilerPassTestCase
     private function getGlobalDependencyDefinition()
     {
         $definition = new Definition();
-        $definition->addArgument(['name'=> self::G_DEPENDENCY_NAME, 'value' => self::G_DEPENDENCY_VALUE]);
+        $definition->addArgument([self::G_DEPENDENCY_NAME => self::G_DEPENDENCY_VALUE]);
         $definition->setClass('PhpInteractor\DependencyCoordinator');
         $definition->addTag($this->container->getParameter('php_interactor.tag.dependency'));
 
@@ -86,7 +86,7 @@ class InteractorDependencyCompilerPassTest extends AbstractCompilerPassTestCase
     private function getInteractorDependencyDefinition()
     {
         $definition = new Definition();
-        $definition->addArgument(['name' => self::I_DEPENDENCY_NAME, 'value' => self::I_DEPENDENCY_VALUE]);
+        $definition->addArgument([self::I_DEPENDENCY_NAME => self::I_DEPENDENCY_VALUE]);
         $definition->setClass('PhpInteractor\DependencyCoordinator');
         $definition->addTag($this->container->getParameter('php_interactor.tag.dependency'), ['interactor' => self::I_NAME]);
 
