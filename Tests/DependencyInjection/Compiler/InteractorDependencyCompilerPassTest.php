@@ -31,13 +31,10 @@ class InteractorDependencyCompilerPassTest extends AbstractCompilerPassTestCase
     /** @var InteractorMapCompilerPass */
     private $compilerPass;
 
-    /** @var string */
-    private $directory;
-
     /** @test */
     public function process()
     {
-        $this->setDefinition( $this->container->getParameter('php_interactor.tag.dispatcher'), new Definition());
+        $this->setDefinition($this->container->getParameter('php_interactor.tag.dispatcher'), new Definition());
         $this->setDefinition('php_interactor.dependency.global', $this->getGlobalDependencyDefinition());
         $this->setDefinition('php_interactor.dependency.interactor_specific', $this->getInteractorDependencyDefinition());
         $this->compile();
@@ -67,7 +64,6 @@ class InteractorDependencyCompilerPassTest extends AbstractCompilerPassTestCase
         parent::setUp();
 
         $this->compilerPass = new InteractorDependencyCompilerPass();
-        $this->directory    = __DIR__ . '/../../Helper/Interactor';
 
         $this->container->setParameter('php_interactor.tag.dependency', 'php_interactor.dependency');
         $this->container->setParameter('php_interactor.tag.dispatcher', 'php_interactor.dispatcher');
